@@ -1,0 +1,28 @@
+#!/bin/bash
+# shellcheck disable=all
+
+HERE="$(dirname "$(realpath "$0")")"
+RG_PREFIX="rg --line-number --no-heading --smart-case "
+cd $HERE
+
+viewer=$EDITOR
+if [[ "$(whereis -b nvim | cut -d: -f2-)" != "" ]];then
+  viewer="nvim -R "
+elif [[ "$(whereis -b vim | cut -d: -f2-)" != "" ]];then
+  viewer="vim -R"
+elif [[ "$(whereis -b less | cut -d: -f2-)" != "" ]];then
+  viewer="less"
+else
+  viewer="more"
+fi
+
+if [[ -f "lua-$1-manual.md" ]]; then
+  $viewer "lua-$1-manual.md";
+else
+  echo Run:
+  echo manlua VERSION
+  echo
+  echo Where VERSION is one of these:
+  ls lua*manual.md | cut -d- -f2
+fi
+
